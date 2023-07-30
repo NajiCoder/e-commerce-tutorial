@@ -39,7 +39,7 @@ export default function ShoppingCardButton({ cart }: ShoppingCardButtonProps) {
           </span>
           <div className="card-actions">
             <Link
-              href="/"
+              href="/cart"
               className="btn btn-primary btn-block"
               onClick={closeDropDown}
             >
