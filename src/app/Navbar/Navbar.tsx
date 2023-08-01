@@ -4,6 +4,9 @@ import { BiLogoMediumOld } from "react-icons/bi";
 
 import { getCart } from "@/libs/db/carts";
 import ShoppingCardButton from "./ShoppingCartButton";
+import UserMenuButton from "./UserMenuButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 async function searchProducts(formData: FormData) {
   "use server";
@@ -15,6 +18,7 @@ async function searchProducts(formData: FormData) {
 }
 
 export default async function Navbar() {
+  const session = await getServerSession(authOptions);
   const cart = await getCart();
 
   return (
@@ -37,6 +41,7 @@ export default async function Navbar() {
             </div>
           </form>
           <ShoppingCardButton cart={cart} />
+          <UserMenuButton session={session} />
         </div>
       </div>
     </div>
