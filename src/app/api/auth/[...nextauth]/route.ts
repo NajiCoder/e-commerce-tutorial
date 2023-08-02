@@ -7,6 +7,7 @@ import { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import GoogleProvider from "next-auth/providers/google";
+import { mergerAnonymousCartWithUserCart } from "@/libs/db/carts";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -16,6 +17,19 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  callbacks: {
+    session({ session, user }) {
+      session.user.id = user.id;
+      return session;
+    },
+  },
+
+  // https://next-auth.js.org/configuration/events
+  events: {
+    async signIn({ user }) {
+      await mergerAnonymousCartWithUserCart(user.id);
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
